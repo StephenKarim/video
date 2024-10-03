@@ -1,0 +1,1 @@
+substringof('General/Active Follow Ups', FileDirRef) and substringof('file note', FileLeafRef) and substringof('.xlsx', FileLeafRef)
