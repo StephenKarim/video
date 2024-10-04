@@ -1,0 +1,41 @@
+import openpyxl
+
+def find_and_replace_excel(file_path, search_text, base_replace_text, output_file):
+    # Load the workbook and select the active worksheet
+    wb = openpyxl.load_workbook(file_path)
+    ws = wb.active
+    
+    # Initialize variables for counting and incrementing
+    replace_count = 0
+    increment_number = 1
+    replacement_batch_size = 60
+
+    # Iterate through all cells in the worksheet
+    for row in ws.iter_rows():
+        for cell in row:
+            if cell.value and isinstance(cell.value, str) and search_text in cell.value:
+                # Construct the new replacement text
+                replace_text = f"{base_replace_text} {increment_number:02d} {base_replace_text}"
+                
+                # Replace the text in the cell
+                cell.value = cell.value.replace(search_text, replace_text)
+                
+                # Increment the replacement counter
+                replace_count += 1
+
+                # Every 60 replacements, increment the number in the replacement text
+                if replace_count % replacement_batch_size == 0:
+                    increment_number += 1
+
+    # Save the modified workbook to the output file
+    wb.save(output_file)
+    print(f"Replacement completed! {replace_count} instances of '{search_text}' were replaced.")
+
+# Define parameters
+file_path = "input.xlsx"  # Path to the Excel file
+search_text = "TextToFind"  # The text you want to find
+base_replace_text = "ReplacementText"  # The base text for replacement
+output_file = "output.xlsx"  # Path to save the modified Excel file
+
+# Call the function
+find_and_replace_excel(file_path, search_text, base_replace_text, output_file)
